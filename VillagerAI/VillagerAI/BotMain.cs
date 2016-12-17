@@ -22,8 +22,10 @@ namespace VillagerAI
 
         public GameAction GetDesiredAction()
         {
-            GameAction action = new GameAction();
-            action.SomeNumber = Info.SomeNumber + 1;
+            GameAction action = new GameAction
+            {
+                SomeNumber = Info.SomeNumber + 1
+            };
             return action;
         }
 
