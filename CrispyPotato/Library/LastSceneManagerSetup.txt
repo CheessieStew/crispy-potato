@@ -1,4 +1,0 @@
-sceneSetups:
-- path: Assets/ExperimentScene/Experiment.unity
-  isLoaded: 1
-  isActive: 1
