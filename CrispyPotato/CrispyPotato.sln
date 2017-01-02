@@ -1,7 +1,7 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2015
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrispyPotato", "CrispyPotato.csproj", "{3B228461-A3A4-8F41-4164-E15C26A0EF7E}"
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2008
+
+Project("{04997EDA-E174-6E55-3606-FAE5B1164929}") = "CrispyPotato", "Assembly-CSharp.csproj", "{9BF8BD88-7B15-A77D-11D6-617B288A69D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,12 +9,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3B228461-A3A4-8F41-4164-E15C26A0EF7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3B228461-A3A4-8F41-4164-E15C26A0EF7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3B228461-A3A4-8F41-4164-E15C26A0EF7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3B228461-A3A4-8F41-4164-E15C26A0EF7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BF8BD88-7B15-A77D-11D6-617B288A69D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BF8BD88-7B15-A77D-11D6-617B288A69D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BF8BD88-7B15-A77D-11D6-617B288A69D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BF8BD88-7B15-A77D-11D6-617B288A69D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
 	EndGlobalSection
 EndGlobal
