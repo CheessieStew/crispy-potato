@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class VillagerScript : MonoBehaviour
+public partial class VillagerScript : MonoBehaviour
 {
 	public Side Side;
 
@@ -60,11 +60,6 @@ public class VillagerScript : MonoBehaviour
 		return villager;
 	}
 
-	public void AI()
-	{
-		
-	}
-
 	// Use this for initialization
 	void Start()
 	{
@@ -75,5 +70,27 @@ public class VillagerScript : MonoBehaviour
 	void Update()
 	{
 		AI();
+	}
+
+	private Vector2 target = Vector2.zero;
+
+	public void AI()
+	{
+		if (Container != null)
+		{
+			if (UnityEngine.Random.Range(0, 1000) == 0)
+			{
+				var dir = UnityEngine.Random.insideUnitSphere;
+				dir.y = 0;
+				GoOutside(dir);
+			}
+		}
+		else
+		{
+			if (target == Vector2.zero || Vector2.Distance(new Vector2(transform.position.x, transform.position.z), target) < 10)
+				target = new Vector2(UnityEngine.Random.Range(10, 490), UnityEngine.Random.Range(10, 490));
+
+			GoTowards(target);
+		}
 	}
 }

@@ -31,7 +31,8 @@ public class VillagersContainer : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		foreach (var man in menInside)
+		var iteranda = new HashSet<GameObject>(menInside);
+		foreach (var man in iteranda)
 			man.GetComponent<VillagerScript>().AI();
 	}
 }
