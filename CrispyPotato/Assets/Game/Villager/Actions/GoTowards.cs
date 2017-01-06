@@ -49,8 +49,14 @@ namespace VillagerAction
 			target3D.y = Terrain.activeTerrain.SampleHeight(target3D);
 			subject.transform.position = target3D;
 
+			var v1 = diff2D;
+			var v2 = Vector2.up;
+			var dot = v1.x * v2.x + v1.y * v2.y;
+			var	det = v1.x * v2.y - v1.y * v2.x;
+			var angle = Mathf.Atan2(det, dot) * Mathf.Rad2Deg;
+
 			subject.transform.rotation = Quaternion.identity;
-			subject.transform.Rotate(0, Vector2.Angle(Vector2.up, diff2D), 0);
+			subject.transform.Rotate(0, angle, 0);
 		}
 	}
 }
