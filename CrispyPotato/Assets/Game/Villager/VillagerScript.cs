@@ -13,6 +13,21 @@ public partial class VillagerScript : MonoBehaviour
 	public int Dexterity = 5;
 	public int Speed = 5;
 
+	private VillagerAction.Action _currentAction;
+
+	private VillagerAction.Action currentAction {
+		get{ return _currentAction; }
+		set {
+			if (_currentAction != null)
+				_currentAction.Subject = null;
+			
+			_currentAction = value;
+
+			if (_currentAction != null)
+				_currentAction.Subject = gameObject;
+		}
+	}
+
 	private GameObject container = null;
 
 	public GameObject Container {
@@ -69,27 +84,29 @@ public partial class VillagerScript : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+		if (currentAction != null && currentAction.Finished)
+			currentAction = null;
+		
 		AI();
-	}
 
-	private Vector2 target = Vector2.zero;
+		if (currentAction != null)
+			currentAction.Update();
+	}
 
 	public void AI()
 	{
-		if (Container != null)
+		if (IsInside())
 		{
-			if (UnityEngine.Random.Range(0, 1000) == 0)
+			if (UnityEngine.Random.Range(0, 5000) == 0)
 			{
 				var dir = UnityEngine.Random.insideUnitSphere;
 				dir.y = 0;
 				GoOutside(dir);
 			}
 		}
-		else
+		else if (!IsBusy())
 		{
-			if (target == Vector2.zero || Vector2.Distance(new Vector2(transform.position.x, transform.position.z), target) < 10)
-				target = new Vector2(UnityEngine.Random.Range(10, 490), UnityEngine.Random.Range(10, 490));
-
+			var target = new Vector2(UnityEngine.Random.Range(10, 490), UnityEngine.Random.Range(10, 490));
 			GoTowards(target);
 		}
 	}
