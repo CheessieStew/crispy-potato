@@ -39,6 +39,7 @@ public partial class VillagerScript : MonoBehaviour
 				{
 					var tmp = container.GetComponent<VillagersContainer>();
 					container = null;
+					gameObject.SetActive(true);
 					tmp.Remove(gameObject);
 				}
 			}
@@ -47,6 +48,7 @@ public partial class VillagerScript : MonoBehaviour
 				if (container == null)
 				{
 					container = value;
+					gameObject.SetActive(false);
 					container.GetComponent<VillagersContainer>().Add(gameObject);
 				}
 				else
@@ -82,7 +84,7 @@ public partial class VillagerScript : MonoBehaviour
 	}
 	
 	// Update is called once per frame
-	void Update()
+	public void Update()
 	{
 		if (currentAction != null && currentAction.Finished)
 			currentAction = null;
@@ -93,7 +95,7 @@ public partial class VillagerScript : MonoBehaviour
 			currentAction.Update();
 	}
 
-	public void AI()
+	void AI()
 	{
 		if (IsInside())
 		{

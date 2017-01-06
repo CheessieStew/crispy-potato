@@ -33,6 +33,6 @@ public class VillagersContainer : MonoBehaviour
 	{
 		var iteranda = new HashSet<GameObject>(menInside);
 		foreach (var man in iteranda)
-			man.GetComponent<VillagerScript>().AI();
+			man.GetComponent<VillagerScript>().Update();
 	}
 }
