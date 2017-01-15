@@ -33,8 +33,10 @@ public class GodCameraScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+#if UNITY_EDITOR
         if (Input.GetKey(KeyCode.Escape))
             UnityEditor.EditorApplication.isPaused = true;
+#endif
         if (Input.GetKey(KeyCode.Mouse1))
         {
             

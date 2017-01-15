@@ -20,8 +20,10 @@ public class BotComms : MonoBehaviour {
         {
             if (_assembly == null)
             {
-                StreamReader reader = new StreamReader(@"Assets/BotMain.csnvm");
-                _assembly = CompileAssembly(reader.ReadToEnd());
+                object asdf = Resources.Load<TextAsset>("BotMain");
+                if (asdf == null)
+                    throw new Exception("fuck my life");
+                _assembly = CompileAssembly("asdf");
             }
             return _assembly;
         }
@@ -32,7 +34,7 @@ public class BotComms : MonoBehaviour {
     void Start()
     {
         info = new GameStateInfo();
-        info.SomeNumber = 5;
+        info.SomeNumber = 1;
         bot = Activator.CreateInstance(assembly.GetType("VillagerBot")) as IVillageBot;
         if (bot == null)
             throw new Exception("Wat");
@@ -44,6 +46,8 @@ public class BotComms : MonoBehaviour {
     {
         print("Bot knows: " + bot.Info.SomeNumber);
         print("Bot says: " + bot.GetDesiredAction().SomeNumber);
+        Vector3 spd = new Vector3(bot.Info.SomeNumber, 0, bot.GetDesiredAction().SomeNumber) * 0.1f;
+        transform.position += spd * Time.deltaTime;
     }
 
     public static Assembly CompileAssembly(string source)
