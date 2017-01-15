@@ -14,9 +14,9 @@ public class VillagerBot : IVillageBot
         Info = new GameStateInfo();
     }
 
-    public Action.GameAction GetDesiredAction()
+    public Action.BaseAction GetDesiredAction()
     {
-        Action.GameAction action = new Action.GameAction();
+        Action.BaseAction action = new Action.BaseAction();
         action.CurrentMood = Action.Mood.Happy;
         return action;
     }

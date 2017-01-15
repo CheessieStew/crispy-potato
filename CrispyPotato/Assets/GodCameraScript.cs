@@ -49,6 +49,9 @@ public class GodCameraScript : MonoBehaviour {
         if (Input.GetAxisRaw("Mouse ScrollWheel") != 0)
             Camera.localPosition += new Vector3(0, 0, Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * ScrollSensitivity);
 
+        position += Quaternion.Euler(0, rotationY, 0) * new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+
+
         CameraRig.transform.position = position;
 	}
 }

@@ -1,18 +1,19 @@
 ﻿
 namespace Action
 {
-
     public enum WalkingStyle
     {
         Run,
         Walk,
         Sneak
     }
+
     public enum TalkStyle
     {
         Speak,
         Yell
     }
+
     public enum InteractStyle
     {
         Attack,
@@ -27,25 +28,25 @@ namespace Action
         Sad
     }
 
-    public class GameAction
+    public class BaseAction
     {
         public Mood CurrentMood;
     }
 
-    public class MovementAction : GameAction
+    public class Movement : BaseAction
     {
         public WalkingStyle Style;
         public int xCoord;
         public int yCoord;
     }
 
-    public class TalkAction : GameAction
+    public class Talk : BaseAction
     {
         public TalkStyle Style;
         public object Words;
     }
 
-    public class InteractAction : GameAction
+    public class Interact : BaseAction
     {
         public InteractStyle Style;
         public int TargetID;

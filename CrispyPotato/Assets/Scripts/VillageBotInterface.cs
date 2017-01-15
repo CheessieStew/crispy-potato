@@ -15,7 +15,7 @@ public interface IVillageBot
         set;
     }
 
-    Action.GameAction GetDesiredAction();
+    Action.BaseAction GetDesiredAction();
 }
 
 
