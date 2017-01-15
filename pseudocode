@@ -1,0 +1,13 @@
+
+
+class Brain
+
+  fun Think
+    AnalyzeSurroundingsAndInput()
+    decision = Decide()
+    if !decision
+      TrySthNew
+    brainTree = Learn(brainTree)
+
+  class BrainTree
+    t3fbsth
