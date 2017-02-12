@@ -3,3 +3,8 @@ D:\Documents\asdf\The Crispiest Potato\AiProtocol\AiProtocol\bin\Release\AiProto
 D:\Documents\asdf\The Crispiest Potato\AiProtocol\AiProtocol\obj\Release\AiProtocol.csprojResolveAssemblyReference.cache
 D:\Documents\asdf\The Crispiest Potato\AiProtocol\AiProtocol\obj\Release\AiProtocol.dll
 D:\Documents\asdf\The Crispiest Potato\AiProtocol\AiProtocol\obj\Release\AiProtocol.pdb
+D:\Documents\GitHub\crispy-potato\AiProtocol\AiProtocol\bin\Release\AiProtocol.dll
+D:\Documents\GitHub\crispy-potato\AiProtocol\AiProtocol\bin\Release\AiProtocol.pdb
+D:\Documents\GitHub\crispy-potato\AiProtocol\AiProtocol\obj\Release\AiProtocol.csprojResolveAssemblyReference.cache
+D:\Documents\GitHub\crispy-potato\AiProtocol\AiProtocol\obj\Release\AiProtocol.dll
+D:\Documents\GitHub\crispy-potato\AiProtocol\AiProtocol\obj\Release\AiProtocol.pdb
