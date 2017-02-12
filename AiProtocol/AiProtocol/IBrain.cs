@@ -32,5 +32,7 @@ namespace AiProtocol
         /// An infinite list of commands.
         /// </summary>
         IEnumerable<Command.BaseCommand> GetDecisions();
+
+        IBrain Cross(IBrain b2);
     }
 }
