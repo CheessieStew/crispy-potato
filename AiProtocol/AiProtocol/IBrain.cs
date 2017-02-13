@@ -16,7 +16,7 @@ namespace AiProtocol
         /// Load a Talk 
         /// </summary>
         /// <param name="talk"></param>
-        void Hear(Command.Talk talk);
+        void Hear(Words words);
 
         /// <summary>
         /// Load a list of entities that are visible to this entity.
