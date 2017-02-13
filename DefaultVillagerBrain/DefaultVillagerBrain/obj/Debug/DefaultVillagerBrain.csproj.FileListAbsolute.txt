@@ -1,0 +1,6 @@
+D:\Documents\asdf\The Crispiest Potato\DefaultVillagerBrain\DefaultVillagerBrain\bin\Debug\DefaultVillagerBrain.dll
+D:\Documents\asdf\The Crispiest Potato\DefaultVillagerBrain\DefaultVillagerBrain\bin\Debug\DefaultVillagerBrain.pdb
+D:\Documents\asdf\The Crispiest Potato\DefaultVillagerBrain\DefaultVillagerBrain\bin\Debug\AiProtocol.dll
+D:\Documents\asdf\The Crispiest Potato\DefaultVillagerBrain\DefaultVillagerBrain\obj\Debug\DefaultVillagerBrain.csprojResolveAssemblyReference.cache
+D:\Documents\asdf\The Crispiest Potato\DefaultVillagerBrain\DefaultVillagerBrain\obj\Debug\DefaultVillagerBrain.dll
+D:\Documents\asdf\The Crispiest Potato\DefaultVillagerBrain\DefaultVillagerBrain\obj\Debug\DefaultVillagerBrain.pdb
