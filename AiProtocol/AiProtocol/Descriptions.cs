@@ -36,12 +36,12 @@ namespace AiProtocol.Descriptions
         Red,
         Blue,
         Carnivore,
-        Herbivore,
         Neutral
     }
 
     public abstract class BaseDescription
     {
+        public EntityType GenericName;
         public Faction Alignment;
         public int EntityID;
         public float xCoord;
