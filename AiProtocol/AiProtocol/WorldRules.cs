@@ -14,7 +14,7 @@ namespace AiProtocol
         /// <summary>
         /// How much food can be stored in magazine per Village's level
         /// </summary>
-        public int oodPerLevel;
+        public int FoodPerLevel;
         /// <summary>
         /// How much food is consumed each time the Village gives birth to a new Villager
         /// </summary>
