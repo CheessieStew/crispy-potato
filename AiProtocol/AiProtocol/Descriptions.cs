@@ -88,7 +88,7 @@ namespace AiProtocol.Descriptions
         public int Energy;
         public int MaxEnergy;
         public int Strength;
-        public int Agillity;
+        public int Agility;
         public int Intelligence;
         public float DeltaTime;
         public IEnumerable<BaseDescription> Inventory;
