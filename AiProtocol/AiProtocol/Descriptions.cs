@@ -46,7 +46,7 @@ namespace AiProtocol.Descriptions
         public int EntityID;
         public float xCoord;
         public float yCoord;
-        public float size;
+        public float Size;
     }
 
     public class LivingDescription : BaseDescription
