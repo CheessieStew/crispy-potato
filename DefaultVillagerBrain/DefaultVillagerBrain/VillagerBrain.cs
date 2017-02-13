@@ -10,6 +10,14 @@ public class VillagerBrain : AiProtocol.IBrain
 {
     // action enforced by the player
     BaseCommand nextAction = null;
+    static AiProtocol.GameRules rules;
+
+    public void SetRules(AiProtocol.GameRules gameRules)
+    {
+        if (rules.TimeWhenGenerated != gameRules.TimeWhenGenerated)
+            rules = gameRules;
+    }
+
 
     public void SetNextAction(BaseCommand action)
     {
