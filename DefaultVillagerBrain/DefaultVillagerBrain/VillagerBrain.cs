@@ -16,10 +16,10 @@ public class VillagerBrain : AiProtocol.IBrain
         nextAction = action;
     }
 
-    public Queue<Talk> TalkMemory = new Queue<Talk>();
-    public void Hear(Talk talk)
+    public Queue<Words> TalkMemory = new Queue<Words>();
+    public void Hear(Words words)
     {
-        TalkMemory.Enqueue(talk);
+        TalkMemory.Enqueue(words);
     }
 
     public void See(IEnumerable<BaseDescription> descriptions)
@@ -66,9 +66,18 @@ public class VillagerBrain : AiProtocol.IBrain
     }
 }
 
+
+//Example implementation of custom Words object that make it possible for agents to talk about anything
+public class ExampleCustomWords : Words
+{
+    // Information we wish to be passed
+}
+
+//Example implementation of custom BrainGenetics that can make brain inheritance possible
 public class MyBrainGenetics : AiProtocol.BrainGenetics
 {
-    //representation of this brain's internal state that we wish to be inherited
+    // representation of this brain's internal state that we wish to be inherited
+    // "this" will always be the mother, while "other" will always be the father
     public override BrainGenetics Cross(BrainGenetics other)
     {
         if (other is MyBrainGenetics)

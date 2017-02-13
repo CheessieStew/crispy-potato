@@ -4,3 +4,9 @@ D:\Documents\asdf\The Crispiest Potato\DefaultVillagerBrain\DefaultVillagerBrain
 D:\Documents\asdf\The Crispiest Potato\DefaultVillagerBrain\DefaultVillagerBrain\obj\Release\DefaultVillagerBrain.dll
 D:\Documents\asdf\The Crispiest Potato\DefaultVillagerBrain\DefaultVillagerBrain\obj\Release\DefaultVillagerBrain.pdb
 D:\Documents\asdf\The Crispiest Potato\DefaultVillagerBrain\DefaultVillagerBrain\obj\Release\DefaultVillagerBrain.csprojResolveAssemblyReference.cache
+D:\Documents\GitHub\crispy-potato\DefaultVillagerBrain\DefaultVillagerBrain\bin\Release\DefaultVillagerBrain.dll
+D:\Documents\GitHub\crispy-potato\DefaultVillagerBrain\DefaultVillagerBrain\bin\Release\DefaultVillagerBrain.pdb
+D:\Documents\GitHub\crispy-potato\DefaultVillagerBrain\DefaultVillagerBrain\bin\Release\AiProtocol.dll
+D:\Documents\GitHub\crispy-potato\DefaultVillagerBrain\DefaultVillagerBrain\obj\Release\DefaultVillagerBrain.csprojResolveAssemblyReference.cache
+D:\Documents\GitHub\crispy-potato\DefaultVillagerBrain\DefaultVillagerBrain\obj\Release\DefaultVillagerBrain.dll
+D:\Documents\GitHub\crispy-potato\DefaultVillagerBrain\DefaultVillagerBrain\obj\Release\DefaultVillagerBrain.pdb
