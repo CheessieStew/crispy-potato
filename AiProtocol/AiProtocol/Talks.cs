@@ -6,9 +6,10 @@
     /// </summary>
     public abstract class Words
     {
-        public int sourceXCoords;
-        public int sourceYCoords;
-        public int talkerID;
+        public float SourceXCoords;
+        public float SourceYCoords;
+        public int TalkerID;
+        public Descriptions.Faction Language;
     }
 
     /// <summary>
