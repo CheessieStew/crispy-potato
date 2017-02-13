@@ -33,6 +33,23 @@ namespace AiProtocol
         /// </summary>
         IEnumerable<Command.BaseCommand> GetDecisions();
 
-        IBrain Cross(IBrain b2);
+        /// <summary>
+        /// Initalize a brain with genetics derived from parents
+        /// </summary>
+        void Initialize(BrainGenetics genetics);
+
+        /// <summary>
+        /// Get the brain's genetic material so some aspects of it can be inherited by this Villager's children
+        /// </summary
+        BrainGenetics GetGeneticMaterial();
+
+    }
+
+    public abstract class BrainGenetics
+    {
+        /// <summary>
+        /// Cross this genetic material with another so a new brain can be created through IBrain.Initialize
+        /// </summary>
+        public abstract BrainGenetics Cross(BrainGenetics other);
     }
 }
