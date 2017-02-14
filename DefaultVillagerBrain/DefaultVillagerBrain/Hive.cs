@@ -17,7 +17,10 @@ public class Hive
     {
         if (!knownObjects.ContainsKey(desc.GenericName))
             knownObjects.Add(desc.GenericName, new Dictionary<int, BaseDescription>());
-        knownObjects[desc.GenericName].Add(desc.EntityID, desc);
+        if (!knownObjects[desc.GenericName].ContainsKey(desc.EntityID))
+            knownObjects[desc.GenericName].Add(desc.EntityID, desc);
+        else
+            knownObjects[desc.GenericName][desc.EntityID] = desc;
     }
 
     public VillageDescription MyVillage
