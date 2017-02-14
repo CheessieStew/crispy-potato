@@ -94,7 +94,7 @@ public class VillagerBrain : AiProtocol.IBrain
         }
     }
 
-    public void Initialize(BrainGenetics genetics)
+    public void Initialize(IBrainGenetics genetics)
     {
         if (genetics is MyBrainGenetics)
         {
@@ -106,7 +106,7 @@ public class VillagerBrain : AiProtocol.IBrain
 
     // return a description of this brain that can be crossed with another's
     // and used to create a new one
-    public BrainGenetics GetGeneticMaterial()
+    public IBrainGenetics GetGeneticMaterial()
     {
         // we can simply return null if we don't want any brain inheritance
         return new MyBrainGenetics();
@@ -122,14 +122,14 @@ public class ExampleCustomWords : Words
 }
 
 //Example implementation of custom BrainGenetics that can make brain inheritance possible
-public class MyBrainGenetics : AiProtocol.BrainGenetics
+public class MyBrainGenetics : IBrainGenetics
 {
     // how do we want to store the brain's qualities
     // so they can be inherited?
 
     // how do we cross them?
     // "this" will always be the mother, while "other" will always be the father
-    public override BrainGenetics Cross(BrainGenetics other)
+    public IBrainGenetics Cross(IBrainGenetics other)
     {
         if (other is MyBrainGenetics)
             return new MyBrainGenetics();

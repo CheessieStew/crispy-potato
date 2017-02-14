@@ -42,20 +42,20 @@ namespace AiProtocol
         /// <summary>
         /// Initalize a brain with genetics derived from parents
         /// </summary>
-        void Initialize(BrainGenetics genetics);
+        void Initialize(IBrainGenetics genetics);
 
         /// <summary>
         /// Get the brain's genetic material so some aspects of it can be inherited by this Villager's children
         /// </summary
-        BrainGenetics GetGeneticMaterial();
+        IBrainGenetics GetGeneticMaterial();
 
     }
 
-    public abstract class BrainGenetics
+    public interface IBrainGenetics
     {
         /// <summary>
-        /// Cross this genetic material with another so a new brain can be created through IBrain.Initialize
+        /// Cross this genetic material with another so a new brain can be created through IBrain.
         /// </summary>
-        public abstract BrainGenetics Cross(BrainGenetics other);
+        IBrainGenetics Cross(IBrainGenetics other);
     }
 }
