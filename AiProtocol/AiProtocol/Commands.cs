@@ -40,11 +40,11 @@ namespace AiProtocol.Command
     public class Movement : BaseCommand
     {
         public MovementStyle Style;
-        public int xCoord;
-        public int yCoord;
+        public float xCoord;
+        public float yCoord;
 
         public Movement() { }
-        public Movement(MovementStyle s, int x, int y)
+        public Movement(MovementStyle s, float x, float y)
         {
             Style = s;
             xCoord = x;
@@ -106,21 +106,36 @@ namespace AiProtocol.Command
     public class MagazinePush : VillageInteraction
     {
         public int TargetID;
+        public override string ToString()
+        {
+            return "Push " + TargetID + " to " + VillageID;
+        }
     }
 
     public class MagazinePull : VillageInteraction
     {
         public Descriptions.ResourceType Type;
+        public override string ToString()
+        {
+            return "Pull " + Type.ToString() + " from " + VillageID;
+        }
     }
 
     public class Procreate : VillageInteraction
     {
-
+        public override string ToString()
+        {
+            return "Procreate with " + VillageID;
+        }
     }
 
     public class PickTool : VillageInteraction
     {
         public Descriptions.ToolKind Tool;
+        public override string ToString()
+        {
+            return "Pick " + Tool.ToString() + " from " + VillageID;
+        }
     }
 
 

@@ -36,16 +36,25 @@ namespace AiProtocol.Descriptions
         Red,
         Blue,
         Carnivore,
-        Herbivore,
         Neutral
+    }
+
+    public enum ToolKind
+    {
+        None,
+        Axe,
+        Sword,
+        Pole,
     }
 
     public abstract class BaseDescription
     {
+        public EntityType GenericName;
         public Faction Alignment;
         public int EntityID;
         public float xCoord;
         public float yCoord;
+        public float Size;
     }
 
     public class LivingDescription : BaseDescription
@@ -96,12 +105,6 @@ namespace AiProtocol.Descriptions
         public int ToolLevel;
     }
 
-    public enum ToolKind
-    {
-        None,
-        Axe,
-        Sword,
-        Pole,
-    }
+
     
 }

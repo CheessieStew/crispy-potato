@@ -8,23 +8,29 @@ namespace AiProtocol
 
     public interface IBrain
     {
+
+        /// <summary>
+        /// Load the world's rules
+        /// </summary>
+        void SetRules(GameRules rules);
+
         /// <summary>
         /// Set next action (based on user console)
         /// </summary>
         void SetNextAction(Command.BaseCommand command);
+
         /// <summary>
         /// Load a Talk 
         /// </summary>
-        /// <param name="talk"></param>
         void Hear(Words words);
 
         /// <summary>
-        /// Load a list of entities that are visible to this entity.
+        /// Load a list of entities that are visible to this entity
         /// </summary>
         void See(IEnumerable<Descriptions.BaseDescription> descriptions);
 
         /// <summary>
-        /// Load the detailed description of this entity.
+        /// Load the detailed description of this entity
         /// </summary>
         void Feel(Descriptions.BodilyFunctions functions);
 
@@ -36,20 +42,20 @@ namespace AiProtocol
         /// <summary>
         /// Initalize a brain with genetics derived from parents
         /// </summary>
-        void Initialize(BrainGenetics genetics);
+        void Initialize(IBrainGenetics genetics);
 
         /// <summary>
         /// Get the brain's genetic material so some aspects of it can be inherited by this Villager's children
         /// </summary
-        BrainGenetics GetGeneticMaterial();
+        IBrainGenetics GetGeneticMaterial();
 
     }
 
-    public abstract class BrainGenetics
+    public interface IBrainGenetics
     {
         /// <summary>
-        /// Cross this genetic material with another so a new brain can be created through IBrain.Initialize
+        /// Cross this genetic material with another so a new brain can be created through IBrain.
         /// </summary>
-        public abstract BrainGenetics Cross(BrainGenetics other);
+        IBrainGenetics Cross(IBrainGenetics other);
     }
 }
