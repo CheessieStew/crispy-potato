@@ -15,7 +15,9 @@ public class Hive
 
     public void Notify(BaseDescription desc)
     {
-        knownObjects[desc.GenericName][desc.EntityID] = desc;
+        if (!knownObjects.ContainsKey(desc.GenericName))
+            knownObjects.Add(desc.GenericName, new Dictionary<int, BaseDescription>());
+        knownObjects[desc.GenericName].Add(desc.EntityID, desc);
     }
 
     public VillageDescription MyVillage
