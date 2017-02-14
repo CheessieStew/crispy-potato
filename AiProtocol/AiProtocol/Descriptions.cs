@@ -39,6 +39,14 @@ namespace AiProtocol.Descriptions
         Neutral
     }
 
+    public enum ToolKind
+    {
+        None,
+        Axe,
+        Sword,
+        Pole,
+    }
+
     public abstract class BaseDescription
     {
         public EntityType GenericName;
@@ -97,12 +105,6 @@ namespace AiProtocol.Descriptions
         public int ToolLevel;
     }
 
-    public enum ToolKind
-    {
-        None,
-        Axe,
-        Sword,
-        Pole,
-    }
+
     
 }
