@@ -137,6 +137,15 @@ public class VillagerBrain : AiProtocol.IBrain
 
     private BaseCommand SeekFood()
     {
+        var food_inside = from food in Description.Inventory where food.GenericName == EntityType.Food select food;
+        if (food_inside.Count() > 0)
+            return new Interaction
+            {
+                CurrentMood = Mood.Happy,
+                Style = InteractionStyle.Eat,
+                TargetID = food_inside.ElementAt(0).EntityID
+            };
+
         var closest = findClosest(from eon in Surroundings
                                   where eon.GenericName == EntityType.Food
                                   select eon) as ResourceDescription;
@@ -205,12 +214,13 @@ public class VillagerBrain : AiProtocol.IBrain
             {
                 if (canInteract(MyHive.MyVillage))
                 {
-                    yield return new MagazinePush
-                    {
-                        CurrentMood = Mood.Happy,
-                        VillageID = MyHive.MyVillage.EntityID,
-                        TargetID = Description.Inventory.ElementAt(0).EntityID
-                    };
+                    while (Description.Inventory.Count() > 0)
+                        yield return new MagazinePush
+                        {
+                            CurrentMood = Mood.Happy,
+                            VillageID = MyHive.MyVillage.EntityID,
+                            TargetID = Description.Inventory.ElementAt(0).EntityID
+                        };
 
                     yield break;
                 }
@@ -286,12 +296,13 @@ public class VillagerBrain : AiProtocol.IBrain
             {
                 if (canInteract(MyHive.MyVillage))
                 {
-                    yield return new MagazinePush
-                    {
-                        CurrentMood = Mood.Happy,
-                        VillageID = MyHive.MyVillage.EntityID,
-                        TargetID = Description.Inventory.ElementAt(0).EntityID
-                    };
+                    while (Description.Inventory.Count() > 0)
+                        yield return new MagazinePush
+                        {
+                            CurrentMood = Mood.Happy,
+                            VillageID = MyHive.MyVillage.EntityID,
+                            TargetID = Description.Inventory.ElementAt(0).EntityID
+                        };
 
                     yield break;
                 }
@@ -390,11 +401,7 @@ public class VillagerBrain : AiProtocol.IBrain
                 };
 
                 foreach (var cmd in AquireFood())
-                {
-                    if (cmd == null)
-                        throw new Exception("aaaaaaaaaaaaa");
                     yield return cmd;
-                }
             }
             else
             {
@@ -406,11 +413,7 @@ public class VillagerBrain : AiProtocol.IBrain
                 };
 
                 foreach (var cmd in AquireWood())
-                {
-                    if (cmd == null)
-                        throw new Exception("bbbbbbbbbbbbbbbbb");
                     yield return cmd;
-                }
             }
         }
     }
