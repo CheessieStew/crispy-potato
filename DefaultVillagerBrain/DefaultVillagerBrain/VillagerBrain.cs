@@ -97,7 +97,7 @@ public class VillagerBrain : AiProtocol.IBrain
 
     private bool canInteract(BaseDescription target)
     {
-        return distance(target, Description) - Description.Size - target.Size < rules.MaxInteractionDistance;
+        return distance(target, Description) - Description.Size - target.Size <= rules.MaxInteractionDistance;
     }
 
     private BaseDescription findClosest(IEnumerable<BaseDescription> list)
@@ -172,13 +172,20 @@ public class VillagerBrain : AiProtocol.IBrain
 
         VillageDescription myVillage = MyHive.MyVillage;
         if (canInteract(myVillage))
-            return new MagazinePull
-            {
-                CurrentMood = Mood.Happy,
-                VillageID = myVillage.EntityID,
-                Type = ResourceType.Food
-            };
-
+        {
+            if (myVillage.FoodInBank > 0)
+                return new MagazinePull
+                {
+                    CurrentMood = Mood.Happy,
+                    VillageID = myVillage.EntityID,
+                    Type = ResourceType.Food
+                };
+            else
+                return new Wait
+                {
+                    CurrentMood = Mood.Angry
+                };
+        }
         else
             return new Movement
             {
@@ -207,11 +214,14 @@ public class VillagerBrain : AiProtocol.IBrain
     private IEnumerable<BaseCommand> AquireFood()
     {
         var explore = Explore().GetEnumerator();
+        bool returning = false;
 
         while (true)
         {
-            if (Description.Inventory.Count() > 2)
+            if (returning || Description.Inventory.Count() > 2)
             {
+                returning = true;
+
                 if (canInteract(MyHive.MyVillage))
                 {
                     while (Description.Inventory.Count() > 0)
@@ -391,7 +401,7 @@ public class VillagerBrain : AiProtocol.IBrain
         }
         else
         {
-            if (myVillage.FoodInBank * 100.0 / myVillage.FoodLimit < 50 || Generator.NextDouble() < 0.5)
+            if (myVillage.FoodInBank * 100.0 / myVillage.FoodLimit < 70 || Generator.NextDouble() < 0.7)
             {
                 yield return new PickTool
                 {
