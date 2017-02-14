@@ -16,20 +16,66 @@ public class VillagerBrain : AiProtocol.IBrain
         nextAction = action;
     }
 
-    public Queue<Talk> TalkMemory = new Queue<Talk>();
+    private Queue<Talk> TalkMemory = new Queue<Talk>();
     public void Hear(Talk talk)
     {
         TalkMemory.Enqueue(talk);
     }
 
+    private List<BaseDescription> Surroundings;
     public void See(IEnumerable<BaseDescription> descriptions)
     {
-        // analize the surroundings
+        Surroundings = new List<BaseDescription>(descriptions);
     }
 
+    private BodilyFunctions Description;
     public void Feel(BodilyFunctions functions)
     {
-        // analize the body's state
+        Description = functions;
+    }
+
+    private bool EnemyClose()
+    {
+        foreach (var eon in Surroundings)
+        {
+            if (eon.Alignment != Description.Alignment && eon.Type == villager)
+                return true;
+        }
+
+        return false;
+    }
+
+    private double distance(BaseDescription a, BaseDescription b)
+    {
+        double dx = a.xCoord - b.xCoord, dy = a.yCoord - b.yCoord;
+        return Math.Sqrt(dx * dx + dy * dy);
+    }
+
+    private BaseCommand AttackClosest()
+    {
+        BaseDescription closest = null;
+        foreach (var eon in Surroundings)
+        {
+            if (eon.Alignment != Description.Alignment && eon.Type == villager)
+                if (closest == null || distance(Description, eon) < distance(Description, closest))
+                    closest = eon;
+        }
+
+        if (distance(Description, closest) < InteractionDistance)
+            return new Interaction
+            {
+                CurrentMood = Mood.Angry,
+                Style = InteractionStyle.Attack,
+                TargetID = closest.EntityID
+            };
+        else
+            return new Movement
+            {
+                CurrentMood = Mood.Angry,
+                Style = MovementStyle.Run,
+                xCoord = (int)closest.xCoord,
+                yCoord = (int)closest.yCoord
+            };
     }
 
     public IEnumerable<BaseCommand> GetDecisions()
@@ -45,7 +91,16 @@ public class VillagerBrain : AiProtocol.IBrain
                 yield return tmp;
                 continue;
             }
-            yield return new AiProtocol.Command.Movement(MovementStyle.Run, 10, 10);
+
+            if (EnemyClose())
+                yield return AttackClosest();
+
+            else if (Description.Energy * 100.0 / Description.MaxEnergy < 30)
+                yield return SeekFood();
+
+            else
+                yield return Idle();
+            //yield return new AiProtocol.Command.Movement(MovementStyle.Run, 10, 10);
         }
     }
 
