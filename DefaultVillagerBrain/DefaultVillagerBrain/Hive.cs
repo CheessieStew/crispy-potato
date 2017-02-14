@@ -27,6 +27,9 @@ public class Hive
     {
         get
         {
+            if (!knownObjects.ContainsKey(EntityType.Village))
+                return null;
+
             foreach (var village in knownObjects[EntityType.Village])
             {
                 if (village.Value.Alignment == faction)
@@ -39,12 +42,17 @@ public class Hive
 
     public IEnumerable<BaseDescription> GetAll(EntityType type)
     {
+        if (!knownObjects.ContainsKey(type))
+            yield break;
+
         foreach (var eon in knownObjects[type])
             yield return eon.Value;
     }
 
     public int Count(EntityType type)
     {
+        if (!knownObjects.ContainsKey(type))
+            return 0;
         return knownObjects[type].Count;
     }
     

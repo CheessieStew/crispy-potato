@@ -198,8 +198,6 @@ public class VillagerBrain : AiProtocol.IBrain
     private IEnumerable<BaseCommand> AquireFood()
     {
         var explore = Explore().GetEnumerator();
-        while (MyHive.Count(EntityType.Lake) == 0)
-            yield return cycle(explore);
 
         while (true)
         {
@@ -227,7 +225,9 @@ public class VillagerBrain : AiProtocol.IBrain
             }
             else 
             {
-                var closestFood = findClosest(MyHive.GetAll(EntityType.Food));
+                var closestFood = findClosest(from food in Surroundings
+                                              where food.GenericName == EntityType.Food
+                                              select food);
                 if (closestFood != null)
                 {
                     if (!canInteract(closestFood))
@@ -248,22 +248,29 @@ public class VillagerBrain : AiProtocol.IBrain
                 }
                 else
                 {
-                    var closest = findClosest(MyHive.GetAll(EntityType.Lake));
-                    if (!canInteract(closest))
-                        yield return new Movement
-                        {
-                            CurrentMood = Mood.Sad,
-                            Style = MovementStyle.Walk,
-                            xCoord = closest.xCoord,
-                            yCoord = closest.yCoord
-                        };
+                    var closest = findClosest(from lake in Surroundings
+                                              where lake.GenericName == EntityType.Lake
+                                              select lake);
+                    if (closest != null)
+                    {
+                        if (!canInteract(closest))
+                            yield return new Movement
+                            {
+                                CurrentMood = Mood.Sad,
+                                Style = MovementStyle.Walk,
+                                xCoord = closest.xCoord,
+                                yCoord = closest.yCoord
+                            };
+                        else
+                            yield return new Interaction
+                            {
+                                CurrentMood = Mood.Angry,
+                                Style = InteractionStyle.Gather,
+                                TargetID = closest.EntityID
+                            };
+                    }
                     else
-                        yield return new Interaction
-                        {
-                            CurrentMood = Mood.Angry,
-                            Style = InteractionStyle.Gather,
-                            TargetID = closest.EntityID
-                        };
+                        yield return cycle(ref explore, Explore());
                 }
             }
         }
@@ -272,8 +279,6 @@ public class VillagerBrain : AiProtocol.IBrain
     private IEnumerable<BaseCommand> AquireWood()
     {
         var explore = Explore().GetEnumerator();
-        while (MyHive.Count(EntityType.Tree) == 0)
-            yield return cycle(explore);
 
         while (true)
         {
@@ -301,7 +306,9 @@ public class VillagerBrain : AiProtocol.IBrain
             }
             else
             {
-                var closestWood = findClosest(MyHive.GetAll(EntityType.Wood));
+                var closestWood = findClosest(from wood in Surroundings
+                                              where wood.GenericName == EntityType.Wood
+                                              select wood);
                 if (closestWood != null)
                 {
                     if (!canInteract(closestWood))
@@ -322,22 +329,30 @@ public class VillagerBrain : AiProtocol.IBrain
                 }
                 else
                 {
-                    var closest = findClosest(MyHive.GetAll(EntityType.Wood));
-                    if (!canInteract(closest))
-                        yield return new Movement
-                        {
-                            CurrentMood = Mood.Sad,
-                            Style = MovementStyle.Walk,
-                            xCoord = closest.xCoord,
-                            yCoord = closest.yCoord
-                        };
+                    var closest = findClosest(from tree in Surroundings
+                                              where tree.GenericName == EntityType.Tree
+                                              select tree);
+
+                    if (closest != null)
+                    {
+                        if (!canInteract(closest))
+                            yield return new Movement
+                            {
+                                CurrentMood = Mood.Sad,
+                                Style = MovementStyle.Walk,
+                                xCoord = closest.xCoord,
+                                yCoord = closest.yCoord
+                            };
+                        else
+                            yield return new Interaction
+                            {
+                                CurrentMood = Mood.Angry,
+                                Style = InteractionStyle.Gather,
+                                TargetID = closest.EntityID
+                            };
+                    }
                     else
-                        yield return new Interaction
-                        {
-                            CurrentMood = Mood.Angry,
-                            Style = InteractionStyle.Gather,
-                            TargetID = closest.EntityID
-                        };
+                        yield return cycle(ref explore, Explore());
                 }
             }
         }
@@ -357,47 +372,59 @@ public class VillagerBrain : AiProtocol.IBrain
 
         if (Generator.NextDouble() < 0.001)
         {
-            yield return new Procreate {
+            yield return new Procreate
+            {
                 CurrentMood = Mood.Sad,
                 VillageID = myVillage.EntityID
             };
-
-            yield break;
-        }
-
-        if (myVillage.FoodInBank * 100.0 / myVillage.FoodLimit < 50 || Generator.NextDouble() < 0.5)
-        {
-            yield return new PickTool
-            {
-                CurrentMood = Mood.Sad,
-                VillageID = myVillage.EntityID,
-                Tool = ToolKind.Pole
-            };
-
-            foreach (var cmd in AquireFood())
-                yield return cmd;
         }
         else
         {
-            yield return new PickTool
+            if (myVillage.FoodInBank * 100.0 / myVillage.FoodLimit < 50 || Generator.NextDouble() < 0.5)
             {
-                CurrentMood = Mood.Sad,
-                VillageID = myVillage.EntityID,
-                Tool = ToolKind.Axe
-            };
+                yield return new PickTool
+                {
+                    CurrentMood = Mood.Sad,
+                    VillageID = myVillage.EntityID,
+                    Tool = ToolKind.Pole
+                };
 
-            foreach (var cmd in AquireWood())
-                yield return cmd;
+                foreach (var cmd in AquireFood())
+                {
+                    if (cmd == null)
+                        throw new Exception("aaaaaaaaaaaaa");
+                    yield return cmd;
+                }
+            }
+            else
+            {
+                yield return new PickTool
+                {
+                    CurrentMood = Mood.Sad,
+                    VillageID = myVillage.EntityID,
+                    Tool = ToolKind.Axe
+                };
+
+                foreach (var cmd in AquireWood())
+                {
+                    if (cmd == null)
+                        throw new Exception("bbbbbbbbbbbbbbbbb");
+                    yield return cmd;
+                }
+            }
         }
-
     }
 
-    private T cycle<T>(IEnumerator<T> it)
+    private T cycle<T>(ref IEnumerator<T> it, IEnumerable<T> resetter)
     {
-        var current = it.Current;
         if (!it.MoveNext())
-            it.Reset();
-        return current;
+        {
+            it = resetter.GetEnumerator();
+            it.MoveNext();
+        }
+
+        
+        return it.Current;
     }
 
     // This should be an infinite collection of commands
@@ -427,7 +454,7 @@ public class VillagerBrain : AiProtocol.IBrain
 
             else
             {
-                yield return cycle(idle);
+                yield return cycle(ref idle, Idle());
             }
             //yield return new AiProtocol.Command.Movement(MovementStyle.Run, 10, 10);
         }
