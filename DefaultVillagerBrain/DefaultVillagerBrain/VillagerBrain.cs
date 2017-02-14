@@ -462,7 +462,7 @@ public class VillagerBrain : AiProtocol.IBrain
             if (EnemyClose())
                 yield return AttackClosest();
 
-            else if (Description.Energy * 100.0 / Description.MaxEnergy < 30)
+            else if (Description.Energy * 100.0 / Description.MaxEnergy < 10)
                 yield return SeekFood();
 
             else
