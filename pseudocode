@@ -1,13 +1,13 @@
 
 
 class Brain
+  fun Show
 
   fun Think
-    AnalyzeSurroundingsAndInput()
-    decision = Decide()
+    possibleActions = AnalyzeSurroundingsAndInput()
+    decision = Decide(brainTree)
     if !decision
-      TrySthNew
+      TrySthNew()
     brainTree = Learn(brainTree)
 
   class BrainTree
-    t3fbsth
