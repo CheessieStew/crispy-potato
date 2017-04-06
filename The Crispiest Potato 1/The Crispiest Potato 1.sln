@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "The Crispiest Potato 1.CSharp.Plugins", "The Crispiest Potato 1.CSharp.Plugins.csproj", "{0787EAB2-80EE-D1E9-EF2B-B1B4D694119C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "The Crispiest Potato 1.CSharp", "The Crispiest Potato 1.CSharp.csproj", "{359F019F-9701-69FD-CF56-FC074D92D93B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "The Crispiest Potato 1.CSharp.Editor.Plugins", "The Crispiest Potato 1.CSharp.Editor.Plugins.csproj", "{2C46C962-8A69-955A-E227-5FEBD8299891}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "The Crispiest Potato 1.CSharp.Editor", "The Crispiest Potato 1.CSharp.Editor.csproj", "{464D953E-9C8F-DBD6-80EC-786C72D75063}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0787EAB2-80EE-D1E9-EF2B-B1B4D694119C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0787EAB2-80EE-D1E9-EF2B-B1B4D694119C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0787EAB2-80EE-D1E9-EF2B-B1B4D694119C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0787EAB2-80EE-D1E9-EF2B-B1B4D694119C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{359F019F-9701-69FD-CF56-FC074D92D93B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{359F019F-9701-69FD-CF56-FC074D92D93B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{359F019F-9701-69FD-CF56-FC074D92D93B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{359F019F-9701-69FD-CF56-FC074D92D93B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C46C962-8A69-955A-E227-5FEBD8299891}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C46C962-8A69-955A-E227-5FEBD8299891}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C46C962-8A69-955A-E227-5FEBD8299891}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C46C962-8A69-955A-E227-5FEBD8299891}.Release|Any CPU.Build.0 = Release|Any CPU
+		{464D953E-9C8F-DBD6-80EC-786C72D75063}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{464D953E-9C8F-DBD6-80EC-786C72D75063}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{464D953E-9C8F-DBD6-80EC-786C72D75063}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{464D953E-9C8F-DBD6-80EC-786C72D75063}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

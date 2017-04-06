@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using AiProtocol.Command;
 using AiProtocol.Descriptions;
 using AiProtocol;
+
+using 
+    static HiveManager;
 
 
 /*
@@ -12,8 +16,7 @@ using AiProtocol;
 */
 public class VillagerBrain : AiProtocol.IBrain
 {
-    static AiProtocol.GameRules rules;
-
+     static AiProtocol.GameRules rules;
     // will be called on each new Brain after it's created, 
     // before asking for the first command
     public void SetRules(AiProtocol.GameRules gameRules)
@@ -21,7 +24,12 @@ public class VillagerBrain : AiProtocol.IBrain
         // the time at which the rules were generated is a good way to determine if
         // the game was restarted, with possibly different rules
         if (rules.TimeWhenGenerated != gameRules.TimeWhenGenerated)
+        {
             rules = gameRules;
+            // DESTROY THE OLD HIVE
+            // AND EVERYTHING WE HOLD STATIC
+            Restart();
+        }
     }
 
     // action enforced by the player
@@ -35,7 +43,7 @@ public class VillagerBrain : AiProtocol.IBrain
         // in this case, we'll obey it
         nextAction = action;
     }
-
+    
 
     public List<Words> TalkMemory = new List<Words>();
 
@@ -48,24 +56,394 @@ public class VillagerBrain : AiProtocol.IBrain
         // all the other senses' information
         TalkMemory.Add(words);
     }
-
-    // this is just an example of how words can be handled
-    void AnalyzeWords(List<Words> words)
-    {
-        // analyze the words we've heard since giving last command
-    }
-
-    // Will be called before each time a new command is requested
+        
+    private List<BaseDescription> Surroundings;
     public void See(IEnumerable<BaseDescription> descriptions)
     {
-        // analyze the surroundings
+        Surroundings = new List<BaseDescription>(descriptions);
+
+        foreach (var eon in descriptions)
+            MyHive.Notify(eon);
     }
 
-    // Will be called before each time a new command is requested
+    private BodilyFunctions Description;
+    private Hive MyHive;
+
 
     public void Feel(BodilyFunctions functions)
     {
-        // analyze the body's state
+
+        Description = functions;
+        MyHive = AllHives[Description.Alignment];
+    }
+
+    private bool EnemyClose()
+    {
+        foreach (var eon in Surroundings)
+        {
+            if (eon.Alignment != Description.Alignment && (eon.GenericName == EntityType.Villager
+                || eon.GenericName == EntityType.Tiger))
+                return true;
+        }
+
+        return false;
+    }
+
+    private double distance(BaseDescription a, BaseDescription b)
+    {
+        double dx = a.xCoord - b.xCoord, dy = a.yCoord - b.yCoord;
+        return Math.Sqrt(dx * dx + dy * dy);
+    }
+
+    private double distance(BaseDescription a, int xCoord, int yCoord)
+    {
+        double dx = a.xCoord - xCoord, dy = a.yCoord - yCoord;
+        return Math.Sqrt(dx * dx + dy * dy);
+    }
+
+    private bool canInteract(BaseDescription target)
+    {
+        return distance(target, Description) - Description.Size - target.Size <= rules.MaxInteractionDistance;
+    }
+
+    private BaseDescription findClosest(IEnumerable<BaseDescription> list)
+    {
+        BaseDescription closest = null;
+        foreach (var eon in list)
+            if (closest == null || distance(Description, eon) < distance(Description, closest))
+                closest = eon;
+
+        return closest;
+    }
+
+    private BaseCommand AttackClosest()
+    {
+        var closest = findClosest(from eon in Surroundings
+                                              where eon.Alignment != Description.Alignment 
+                                                && (eon.GenericName == EntityType.Villager ||
+                                                    eon.GenericName == EntityType.Tiger)
+                                              select eon) as LivingDescription;
+
+        if (canInteract(closest))
+            return new Interaction
+            {
+                CurrentMood = Mood.Angry,
+                Style = InteractionStyle.Attack,
+                TargetID = closest.EntityID
+            };
+        else
+            return new Movement
+            {
+                CurrentMood = Mood.Angry,
+                Style = MovementStyle.Run,
+                xCoord = (int)closest.xCoord,
+                yCoord = (int)closest.yCoord
+            };
+    }
+
+    private BaseCommand SeekFood()
+    {
+        var food_inside = from food in Description.Inventory where food.GenericName == EntityType.Food select food;
+        if (food_inside.Count() > 0)
+            return new Interaction
+            {
+                CurrentMood = Mood.Happy,
+                Style = InteractionStyle.Eat,
+                TargetID = food_inside.ElementAt(0).EntityID
+            };
+
+        var closest = findClosest(from eon in Surroundings
+                                  where eon.GenericName == EntityType.Food
+                                  select eon) as ResourceDescription;
+
+        if (closest != null)
+        {
+            if (canInteract(closest))
+                return new Interaction
+                {
+                    CurrentMood = Mood.Happy,
+                    Style = InteractionStyle.Eat,
+                    TargetID = closest.EntityID
+                };
+
+            else
+                return new Movement
+                {
+                    CurrentMood = Mood.Happy,
+                    Style = MovementStyle.Run,
+                    xCoord = closest.xCoord,
+                    yCoord = closest.yCoord
+                };
+        }
+
+        VillageDescription myVillage = MyHive.MyVillage;
+        if (canInteract(myVillage))
+        {
+            if (myVillage.FoodInBank > 0)
+                return new MagazinePull
+                {
+                    CurrentMood = Mood.Happy,
+                    VillageID = myVillage.EntityID,
+                    Type = ResourceType.Food
+                };
+            else
+                return new Wait
+                {
+                    CurrentMood = Mood.Angry
+                };
+        }
+        else
+            return new Movement
+            {
+                CurrentMood = Mood.Angry,
+                Style = MovementStyle.Walk,
+                xCoord = myVillage.xCoord,
+                yCoord = myVillage.yCoord
+            };
+    }
+
+    private IEnumerable<BaseCommand> Explore()
+    {
+        int tx = Generator.Next(-100, 100) + (int)Description.xCoord;
+        int ty = Generator.Next(-100, 100) + (int)Description.yCoord;
+
+        while (distance(Description, tx, ty) > 3)
+            yield return new Movement
+            {
+                CurrentMood = Mood.Happy,
+                Style = MovementStyle.Walk,
+                xCoord = tx,
+                yCoord = ty
+            };
+    }
+
+    private IEnumerable<BaseCommand> AquireFood()
+    {
+        var explore = Explore().GetEnumerator();
+        bool returning = false;
+
+        while (true)
+        {
+            if (returning || Description.Inventory.Count() > 2)
+            {
+                returning = true;
+
+                if (canInteract(MyHive.MyVillage))
+                {
+                    while (Description.Inventory.Count() > 0)
+                        yield return new MagazinePush
+                        {
+                            CurrentMood = Mood.Happy,
+                            VillageID = MyHive.MyVillage.EntityID,
+                            TargetID = Description.Inventory.ElementAt(0).EntityID
+                        };
+
+                    yield break;
+                }
+                else
+                    yield return new Movement
+                    {
+                        CurrentMood = Mood.Sad,
+                        Style = MovementStyle.Walk,
+                        xCoord = MyHive.MyVillage.xCoord,
+                        yCoord = MyHive.MyVillage.yCoord
+                    };
+            }
+            else 
+            {
+                var closestFood = findClosest(from food in Surroundings
+                                              where food.GenericName == EntityType.Food
+                                              select food);
+                if (closestFood != null)
+                {
+                    if (!canInteract(closestFood))
+                        yield return new Movement
+                        {
+                            CurrentMood = Mood.Sad,
+                            Style = MovementStyle.Walk,
+                            xCoord = closestFood.xCoord,
+                            yCoord = closestFood.yCoord
+                        };
+                    else
+                        yield return new Interaction
+                        {
+                            CurrentMood = Mood.Angry,
+                            Style = InteractionStyle.PickUp,
+                            TargetID = closestFood.EntityID
+                        };
+                }
+                else
+                {
+                    var closest = findClosest(from lake in Surroundings
+                                              where lake.GenericName == EntityType.Lake
+                                              select lake);
+                    if (closest != null)
+                    {
+                        if (!canInteract(closest))
+                            yield return new Movement
+                            {
+                                CurrentMood = Mood.Sad,
+                                Style = MovementStyle.Walk,
+                                xCoord = closest.xCoord,
+                                yCoord = closest.yCoord
+                            };
+                        else
+                            yield return new Interaction
+                            {
+                                CurrentMood = Mood.Angry,
+                                Style = InteractionStyle.Gather,
+                                TargetID = closest.EntityID
+                            };
+                    }
+                    else
+                        yield return cycle(ref explore, Explore());
+                }
+            }
+        }
+    }
+
+    private IEnumerable<BaseCommand> AquireWood()
+    {
+        var explore = Explore().GetEnumerator();
+
+        while (true)
+        {
+            if (Description.Inventory.Count() > 2)
+            {
+                if (canInteract(MyHive.MyVillage))
+                {
+                    while (Description.Inventory.Count() > 0)
+                        yield return new MagazinePush
+                        {
+                            CurrentMood = Mood.Happy,
+                            VillageID = MyHive.MyVillage.EntityID,
+                            TargetID = Description.Inventory.ElementAt(0).EntityID
+                        };
+
+                    yield break;
+                }
+                else
+                    yield return new Movement
+                    {
+                        CurrentMood = Mood.Sad,
+                        Style = MovementStyle.Walk,
+                        xCoord = MyHive.MyVillage.xCoord,
+                        yCoord = MyHive.MyVillage.yCoord
+                    };
+            }
+            else
+            {
+                var closestWood = findClosest(from wood in Surroundings
+                                              where wood.GenericName == EntityType.Wood
+                                              select wood);
+                if (closestWood != null)
+                {
+                    if (!canInteract(closestWood))
+                        yield return new Movement
+                        {
+                            CurrentMood = Mood.Sad,
+                            Style = MovementStyle.Walk,
+                            xCoord = closestWood.xCoord,
+                            yCoord = closestWood.yCoord
+                        };
+                    else
+                        yield return new Interaction
+                        {
+                            CurrentMood = Mood.Angry,
+                            Style = InteractionStyle.PickUp,
+                            TargetID = closestWood.EntityID
+                        };
+                }
+                else
+                {
+                    var closest = findClosest(from tree in Surroundings
+                                              where tree.GenericName == EntityType.Tree
+                                              select tree);
+
+                    if (closest != null)
+                    {
+                        if (!canInteract(closest))
+                            yield return new Movement
+                            {
+                                CurrentMood = Mood.Sad,
+                                Style = MovementStyle.Walk,
+                                xCoord = closest.xCoord,
+                                yCoord = closest.yCoord
+                            };
+                        else
+                            yield return new Interaction
+                            {
+                                CurrentMood = Mood.Angry,
+                                Style = InteractionStyle.Gather,
+                                TargetID = closest.EntityID
+                            };
+                    }
+                    else
+                        yield return cycle(ref explore, Explore());
+                }
+            }
+        }
+    }
+
+    private IEnumerable<BaseCommand> Idle()
+    {
+        var myVillage = MyHive.MyVillage;
+        while (!canInteract(myVillage))
+            yield return new Movement
+            {
+                CurrentMood = Mood.Happy,
+                Style = MovementStyle.Walk,
+                xCoord = myVillage.xCoord,
+                yCoord = myVillage.yCoord
+            };
+
+        if (Generator.NextDouble() < 0.001)
+        {
+            yield return new Procreate
+            {
+                CurrentMood = Mood.Sad,
+                VillageID = myVillage.EntityID
+            };
+        }
+        else
+        {
+            if (myVillage.FoodInBank * 100.0 / myVillage.FoodLimit < 70 || Generator.NextDouble() < 0.7)
+            {
+                yield return new PickTool
+                {
+                    CurrentMood = Mood.Sad,
+                    VillageID = myVillage.EntityID,
+                    Tool = ToolKind.Pole
+                };
+
+                foreach (var cmd in AquireFood())
+                    yield return cmd;
+            }
+            else
+            {
+                yield return new PickTool
+                {
+                    CurrentMood = Mood.Sad,
+                    VillageID = myVillage.EntityID,
+                    Tool = ToolKind.Axe
+                };
+
+                foreach (var cmd in AquireWood())
+                    yield return cmd;
+            }
+        }
+    }
+
+    private T cycle<T>(ref IEnumerator<T> it, IEnumerable<T> resetter)
+    {
+        if (!it.MoveNext())
+        {
+            it = resetter.GetEnumerator();
+            it.MoveNext();
+        }
+
+        
+        return it.Current;
     }
 
     // This should be an infinite collection of commands
@@ -73,9 +451,9 @@ public class VillagerBrain : AiProtocol.IBrain
     // before each time a next command is needed
     public IEnumerable<BaseCommand> GetDecisions()
     {
+        var idle = Idle().GetEnumerator();
         while (true)
         {
-            AnalyzeWords(TalkMemory);
             TalkMemory.Clear();
             if (nextAction != null)
             {
@@ -86,11 +464,18 @@ public class VillagerBrain : AiProtocol.IBrain
                 yield return tmp;
                 continue;
             }
-            // choose an action based on what we heard, saw and felt
-            // if the action is illegal we'll be asked for another one
-            // we don't need to worry about obstacle avoidance, the villagers have
-            // their own pathfinding
-            yield return new AiProtocol.Command.Movement(MovementStyle.Run, 0, 0);
+
+            if (EnemyClose())
+                yield return AttackClosest();
+
+            else if (Description.Energy * 100.0 / Description.MaxEnergy < 10)
+                yield return SeekFood();
+
+            else
+            {
+                yield return cycle(ref idle, Idle());
+            }
+            //yield return new AiProtocol.Command.Movement(MovementStyle.Run, 10, 10);
         }
     }
 
