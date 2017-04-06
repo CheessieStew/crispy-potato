@@ -5,7 +5,8 @@ using AiProtocol.Command;
 using AiProtocol.Descriptions;
 using AiProtocol;
 
-using static HiveManager;
+using 
+    static HiveManager;
 
 
 /*
@@ -15,8 +16,7 @@ using static HiveManager;
 */
 public class VillagerBrain : AiProtocol.IBrain
 {
-    static AiProtocol.GameRules rules;
-
+     static AiProtocol.GameRules rules;
     // will be called on each new Brain after it's created, 
     // before asking for the first command
     public void SetRules(AiProtocol.GameRules gameRules)
@@ -24,7 +24,12 @@ public class VillagerBrain : AiProtocol.IBrain
         // the time at which the rules were generated is a good way to determine if
         // the game was restarted, with possibly different rules
         if (rules.TimeWhenGenerated != gameRules.TimeWhenGenerated)
+        {
             rules = gameRules;
+            // DESTROY THE OLD HIVE
+            // AND EVERYTHING WE HOLD STATIC
+            Restart();
+        }
     }
 
     // action enforced by the player
@@ -67,6 +72,7 @@ public class VillagerBrain : AiProtocol.IBrain
 
     public void Feel(BodilyFunctions functions)
     {
+
         Description = functions;
         MyHive = AllHives[Description.Alignment];
     }

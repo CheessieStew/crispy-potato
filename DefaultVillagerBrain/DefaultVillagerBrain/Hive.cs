@@ -59,14 +59,21 @@ public class Hive
 }
 
 
-public static class HiveManager
+public  static class HiveManager
 {
-    public static Random Generator = new Random();
-    public static Dictionary<Faction, Hive> AllHives = new Dictionary<Faction, Hive>();
+    public  static Random Generator = new Random();
+    public  static Dictionary<Faction, Hive> AllHives = new Dictionary<Faction, Hive>();
 
-    static HiveManager()
+    public static void Restart()
     {
+        AllHives.Clear();
         AllHives.Add(Faction.Blue, new Hive(Faction.Blue));
         AllHives.Add(Faction.Red, new Hive(Faction.Red));
     }
+
+  // static HiveManager()
+  //{
+  //    AllHives.Add(Faction.Blue, new Hive(Faction.Blue));
+  //    AllHives.Add(Faction.Red, new Hive(Faction.Red));
+  //}
 }
